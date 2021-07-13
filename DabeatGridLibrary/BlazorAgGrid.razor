@@ -1,3 +1,20 @@
-﻿<div class="my-component">
-    This Blazor component is defined in the <strong>DabeatGridLibrary</strong> package.
-</div>
+﻿@inject IJSRuntime JsRtime
+
+<div id="myGrid" @ref="_gridRef" class="ag-theme-balham-dark ag-grid"></div>
+
+<div>hello world</div>
+
+
+@code{
+    private ElementReference _gridRef;
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JsRtime.InvokeVoidAsync("ag_Grid.initialize" , _gridRef);
+        }
+        //await JsRtime.InvokeVoidAsync("window.agGrid");
+    }
+}
+
+
