@@ -1,5 +1,5 @@
 ﻿@inject IJSRuntime JsRtime
-
+@implements IDisposable
 <div id="myGrid" @ref="_gridRef" class="ag-theme-balham-dark ag-grid"></div>
 
 <div>hello world</div>
@@ -7,6 +7,7 @@
 
 @code{
     private ElementReference _gridRef;
+    private string _componentId = Guid.NewGuid().ToString();
 
     [Parameter]
     public IEnumerable<object> RowData { get; set; }
@@ -15,10 +16,18 @@
     {
         if (firstRender)
         {
-            await JsRtime.InvokeVoidAsync("ag_Grid.initialize" , _gridRef);
+            await JsRtime.InvokeVoidAsync("ag_Grid.initialize",
+                _componentId,_gridRef);
         }
-        await JsRtime.InvokeVoidAsync("ag_Grid.setRows", RowData);
+        await JsRtime.InvokeVoidAsync("ag_Grid.setRows",
+            _componentId,RowData);
     }
+
+    public async void Dispose()
+    {
+        await JsRtime.InvokeVoidAsync("ag_Grid.dispose", _componentId);
+    }
+
 }
 
 

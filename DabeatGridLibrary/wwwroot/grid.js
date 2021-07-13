@@ -1,7 +1,8 @@
 (function () {
 
     window.ag_Grid = {
-        initialize: function (gridDiv) {
+        gridOptionsByComponentId: {},
+        initialize: function (componentId, gridDiv) {
 
             var columnDefs = [
                 { headerName: "Employee ID", field: "employeeId", sortable: true, filter: true },
@@ -35,10 +36,14 @@
             
            
             new agGrid.Grid(gridDiv, gridOptions);
-            this.gridOptions = gridOptions;
+            this.gridOptionsByComponentId[componentId] = gridOptions;
         },
-        setRows: function (rowData) {
-            this.gridOptions.api.setRowData(rowData);
+        setRows: function (componentId, rowData) {
+            this.gridOptionsByComponentId[componentId].api.setRowData(rowData);
+        },
+        dispose: function (componentId) {
+            delete this.gridOptionsByComponentId[componentId];
+
         }
 
         // set up the ag-grid after the page has finished loading
