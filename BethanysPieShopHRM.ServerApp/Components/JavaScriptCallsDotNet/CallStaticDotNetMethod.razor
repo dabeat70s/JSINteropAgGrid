@@ -1,0 +1,21 @@
+﻿
+<h2>Call a static .NET method from JavaScript</h2>
+<button class="btn btn-secondary" onclick="blazorInterop.callStaticDotNetMethod()">
+    Call BuildEmail method
+</button>
+<button class="btn btn-secondary" onclick="blazorInterop.callStaticDotNetMethodCustomIdentifier()">
+    Call BuildEmail method overload
+</button>
+
+@code{ [JSInvokable]
+            public static string BuildEmail(string firstName)
+            {
+                return $"{firstName}@thomasclaudiushuber.com";
+            }
+
+            [JSInvokable("BuildEmailWithLastName")]
+            public static string BuildEmail(string firstName, string lastName)
+            {
+                return $"{firstName}.{lastName}@MusicLEJ.com";
+            } 
+    }

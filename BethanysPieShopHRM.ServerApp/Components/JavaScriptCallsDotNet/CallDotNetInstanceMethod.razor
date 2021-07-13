@@ -1,0 +1,23 @@
+﻿@using System.Drawing
+@inject IJSRuntime JSRuntime
+
+<h2>Call a .NET instance method from JavaScript</h2>
+<button class="btn btn-secondary" @onclick="PassDotNetInstanceToJavaScript">Call it!</button>
+<div>Window size received from JavaScript: @_windowSize.Width x @_windowSize.Height</div>
+
+@code{ 
+    private Size _windowSize;
+
+            private async Task PassDotNetInstanceToJavaScript()
+            {
+                var dotNetObjectReference = DotNetObjectReference.Create(this);
+                await JSRuntime.InvokeVoidAsync("blazorInterop.callDotNetInstanceMethod",
+                  dotNetObjectReference);
+            }
+
+            [JSInvokable]
+            public void SetWindowSize(Size windowSize)
+            {
+                _windowSize = windowSize;
+                StateHasChanged();
+            } }

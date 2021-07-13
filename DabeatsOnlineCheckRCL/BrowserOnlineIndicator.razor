@@ -1,0 +1,33 @@
+﻿@inject IJSRuntime JSRuntim
+@if (_isOnline)
+{
+  <div class="isOnline">You're online</div>
+}
+else
+{
+  <div class="isOffline">You're offline</div>
+}
+
+@code {
+    private bool _isOnline = true;
+
+    // TODO: Get status from navigator's onLine property
+    //       and subscribe to 'online' and 'offline' events to update
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotnetRef = DotNetObjectReference.Create(this);
+            await JSRuntim.InvokeVoidAsync("dabeatOnlineCheckRCL.registerOnlineHandler",
+                dotnetRef); 
+        }
+    }
+
+    [JSInvokable]
+    public void SetOnlineStatus(bool isOnline)
+    {
+        _isOnline = isOnline;
+        StateHasChanged();
+    }
+}

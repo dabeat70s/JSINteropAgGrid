@@ -1,0 +1,23 @@
+﻿@inject IJSRuntime JSRuntime
+
+<h2>Handle JavaScript errors in .NET</h2>
+<button class="btn btn-secondary" @onclick="InvokeJavaScriptFunction">
+  Call JavaScript function that throws an error
+</button>
+<div>Error message: @errorMessage</div>
+
+@code{
+  private string errorMessage;
+
+  private async Task InvokeJavaScriptFunction()
+  {
+    try
+    {
+      await JSRuntime.InvokeVoidAsync("blazorInterop.throwsError");
+    }
+    catch (JSException exception)
+    {
+      errorMessage = exception.Message;
+    }
+  }
+}

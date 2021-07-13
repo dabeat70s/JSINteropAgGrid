@@ -1,0 +1,84 @@
+﻿@inject IUserSettingsService UserSettingsService
+@implements IDisposable
+
+<div class="bg-light" id="sidebar-wrapper">
+  <div class="sidebar-logo">
+    <img class="img-responsive" id="logo" src="images/bethanylogo.png" />
+  </div>
+  <div class="profile">
+    <div class="profile-bg">
+      <img class="img-responsive" src="images/bethany.jpg" />
+    </div>
+    <div class="profile-picture">
+      <img class="img-responsive circle account-photo" src="@settings.UserPictureUrl" />
+    </div>
+  </div>
+  @if (settings.ShowOnlineIndicator)
+  {
+    <BrowserOnlineIndicator></BrowserOnlineIndicator>
+  }
+<div class="menu list-group list-group-flush">
+
+    <span class="nav-heading">Human Resources</span>
+
+    <NavLink class="list-group-item list-group-item-action bg-light" href="/" Match="NavLinkMatch.All">
+        <span class="oi oi-home" aria-hidden="true"></span> Home
+    </NavLink>
+    <NavLink class="list-group-item list-group-item-action bg-light" href="/employeeoverview">
+        <span class="oi oi-list-rich" aria-hidden="true"></span> Employees
+    </NavLink>
+    <NavLink class="list-group-item list-group-item-action bg-light" href="/employeeedit">
+        <span class="oi oi-list-rich" aria-hidden="true"></span> Add new employee
+    </NavLink>
+    <NavLink class="list-group-item list-group-item-action bg-light" href="/settings">
+        <span class="oi oi-list-rich" aria-hidden="true"></span> Settings
+    </NavLink>
+
+    <span class="nav-heading">Developers</span>
+
+    <NavLink class="list-group-item list-group-item-action bg-light" href="/dotnetcallsjavascript">
+        <span class="oi oi-list-rich" aria-hidden="true"></span> .NET calls JavaScript
+    </NavLink>
+    <NavLink class="list-group-item list-group-item-action bg-light" href="/javascriptcallsdotnet">
+        <span class="oi oi-list-rich" aria-hidden="true"></span> JavaScript calls .NET
+    </NavLink>
+    <NavLink class="list-group-item list-group-item-action bg-light" href="/gallery">
+        <span class="oi oi-list-rich" aria-hidden="true"></span> gallery
+    </NavLink>
+
+</div>
+</div>
+
+@code {
+
+  private UserSettings settings;
+
+  private bool collapseNavMenu = true;
+
+  private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+  private void ToggleNavMenu()
+  {
+    collapseNavMenu = !collapseNavMenu;
+  }
+
+  protected override void OnInitialized()
+  {
+    UserSettingsService.UserSettingsChanged += UserSettingsChanged;
+    settings = UserSettingsService.UserSettings;
+  }
+
+  public void Dispose()
+  {
+    UserSettingsService.UserSettingsChanged -= UserSettingsChanged;
+  }
+
+  private void UserSettingsChanged(object sender, UserSettingsChangedEventArgs e)
+  {
+    this.settings = e.UserSettings;
+    InvokeAsync(() =>
+    {
+      StateHasChanged();
+    });
+  }
+}

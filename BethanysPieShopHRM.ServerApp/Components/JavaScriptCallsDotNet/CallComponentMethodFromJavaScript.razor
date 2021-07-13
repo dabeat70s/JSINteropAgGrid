@@ -1,0 +1,25 @@
+﻿@using System.Drawing
+@inject IJSRuntime JSRuntime
+
+<h2>Call Blazor component method from JavaScript event handler</h2>
+<div>Window size received from JavaScript: @_windowSize.Width x @_windowSize.Height</div>
+
+@code{ private Size _windowSize;
+
+            protected async override Task OnAfterRenderAsync(bool firstRender)
+            {
+                if (firstRender)
+                {
+                    var dotNetObjectReference = DotNetObjectReference.Create(this);
+                    await JSRuntime.InvokeVoidAsync("blazorInterop.registerResizeHandler",
+                      dotNetObjectReference);
+                }
+            }
+
+            [JSInvokable]
+            public void SetWindowSize(Size windowSize)
+            {
+                _windowSize = windowSize;
+                StateHasChanged();
+            } 
+    }
