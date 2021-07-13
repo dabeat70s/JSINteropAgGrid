@@ -7,13 +7,17 @@
 
 @code{
     private ElementReference _gridRef;
+
+    [Parameter]
+    public IEnumerable<object> RowData { get; set; }
+
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             await JsRtime.InvokeVoidAsync("ag_Grid.initialize" , _gridRef);
         }
-        //await JsRtime.InvokeVoidAsync("window.agGrid");
+        await JsRtime.InvokeVoidAsync("ag_Grid.setRows", RowData);
     }
 }
 

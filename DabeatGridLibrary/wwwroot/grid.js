@@ -25,7 +25,7 @@
 
             var gridOptions = {
                 columnDefs: columnDefs,
-                rowData: rowData,
+                //rowData: rowData,
                 rowSelection: 'single',
                 onSelectionChanged: onSelectionChanged,
                 pagination: true,
@@ -35,6 +35,10 @@
             
            
             new agGrid.Grid(gridDiv, gridOptions);
+            this.gridOptions = gridOptions;
+        },
+        setRows: function (rowData) {
+            this.gridOptions.api.setRowData(rowData);
         }
 
         // set up the ag-grid after the page has finished loading
