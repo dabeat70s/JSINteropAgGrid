@@ -8,8 +8,14 @@
 else
 {
 <BlazorAgGrid RowData="Employees" TRow="Employee"
-              AutoGenerateColumns="true"
-              OnSelectionChanged="GridSelectionChanged" />
+              AutoGenerateColumns="false"
+              OnSelectionChanged="GridSelectionChanged">
+    <BlazorAgGridColumn HeaderName="Firstname" Field="FirstName"
+                        Sortable="true" Filter="true"></BlazorAgGridColumn>
+    <BlazorAgGridColumn HeaderName="Lastname" Field="LastName"
+                        Sortable="true" Filter="true"></BlazorAgGridColumn>
+
+</BlazorAgGrid>
 
                 @if (SelectedEmployee != null)
                 {
