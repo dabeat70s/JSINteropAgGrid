@@ -1,4 +1,6 @@
-﻿@inject IJSRuntime JsRtime
+﻿@typeparam TRow
+@inject IJSRuntime JsRtime
+
 @implements IDisposable
 <div id="myGrid" @ref="_gridRef" class="ag-theme-balham-dark ag-grid"></div>
 
@@ -8,19 +10,47 @@
 @code{
     private ElementReference _gridRef;
     private string _componentId = Guid.NewGuid().ToString();
+    private bool _inSelectionChangedEvent;
 
     [Parameter]
-    public IEnumerable<object> RowData { get; set; }
+    public IEnumerable<TRow> RowData { get; set; }
+
+    [Parameter]
+    public EventCallback<TRow> OnSelectionChanged { get; set; }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             await JsRtime.InvokeVoidAsync("ag_Grid.initialize",
-                _componentId,_gridRef);
+                _componentId,_gridRef, DotNetObjectReference.Create(this));
         }
         await JsRtime.InvokeVoidAsync("ag_Grid.setRows",
             _componentId,RowData);
+    }
+
+    protected override bool ShouldRender()
+    {
+        //return base.ShouldRender();
+        return !_inSelectionChangedEvent;
+    }
+
+
+    [JSInvokable]
+    public async Task RaiseSelectionChangedAsync(TRow row)
+    {
+        try
+        {
+            _inSelectionChangedEvent = true;
+            if (OnSelectionChanged.HasDelegate)
+            {
+                await OnSelectionChanged.InvokeAsync(row);
+            }
+        }
+        finally
+        {
+            _inSelectionChangedEvent = false;
+        }
     }
 
     public async void Dispose()
@@ -31,7 +61,7 @@
         }
         catch (Exception ex)
         {
-
+            System.Diagnostics.Debug.WriteLine(ex.Message);
             Console.WriteLine(ex);
         }
     }

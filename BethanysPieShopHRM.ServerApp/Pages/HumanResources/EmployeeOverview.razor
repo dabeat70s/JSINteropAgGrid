@@ -7,7 +7,22 @@
 <p><em>Loading...</em></p> }
 else
 {
-<BlazorAgGrid RowData="Employees" />
+<BlazorAgGrid RowData="Employees" TRow="Employee"
+              OnSelectionChanged="GridSelectionChanged" />
 
-<BlazorAgGrid RowData="Employees" />
-}
+                @if (SelectedEmployee != null)
+                {
+<div class="card">
+    <div class="card-header">
+        @SelectedEmployee.FirstName @SelectedEmployee.LastName
+    </div>
+    <div class="card-body">
+        <a class="btn btn-secondary" href="employeeedit/@SelectedEmployee.EmployeeId">edit</a>
+        <a class="btn btn-secondary" href="employeedetail/@SelectedEmployee.EmployeeId">view</a>
+    </div>
+</div>}
+
+                                
+    
+    
+    <BlazorAgGrid RowData="Employees" />}

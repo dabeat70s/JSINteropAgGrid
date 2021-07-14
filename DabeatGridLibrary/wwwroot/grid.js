@@ -2,7 +2,7 @@
 
     window.ag_Grid = {
         gridOptionsByComponentId: {},
-        initialize: function (componentId, gridDiv) {
+        initialize: function (componentId, gridDiv, dotNetObjRef) {
 
             var columnDefs = [
                 { headerName: "Employee ID", field: "employeeId", sortable: true, filter: true },
@@ -20,7 +20,8 @@
             function onSelectionChanged() {
                 var selectedRows = gridOptions.api.getSelectedRows();
                 if (selectedRows.length === 1) {
-                    console.log(selectedRows[0].firstName);
+                    //console.log(selectedRows[0].firstName);
+                    dotNetObjRef.invokeMethodAsync("RaiseSelectionChangedAsync", selectedRows[0]);
                 }
             };
 
