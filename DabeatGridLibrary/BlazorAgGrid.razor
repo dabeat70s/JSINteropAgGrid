@@ -25,7 +25,15 @@
 
     public async void Dispose()
     {
-        await JsRtime.InvokeVoidAsync("ag_Grid.dispose", _componentId);
+        try
+        {
+            await JsRtime.InvokeVoidAsync("ag_Grid.dispose", _componentId);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex);
+        }
     }
 
 }
