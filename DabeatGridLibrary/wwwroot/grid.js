@@ -26,7 +26,7 @@
             };
 
             var gridOptions = {
-                columnDefs: columnDefs,
+                //columnDefs: columnDefs,
                 //rowData: rowData,
                 rowSelection: 'single',
                 onSelectionChanged: onSelectionChanged,
@@ -41,6 +41,9 @@
         },
         setRows: function (componentId, rowData) {
             this.gridOptionsByComponentId[componentId].api.setRowData(rowData);
+        },
+        setColumnDefs: function (componentId, ColumnDefs) {
+            this.gridOptionsByComponentId[componentId].api.setColumnDefs(ColumnDefs);
         },
         dispose: function (componentId) {
             delete this.gridOptionsByComponentId[componentId];

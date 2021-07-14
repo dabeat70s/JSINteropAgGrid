@@ -18,15 +18,38 @@
     [Parameter]
     public EventCallback<TRow> OnSelectionChanged { get; set; }
 
+    [Parameter]
+    public bool AutoGenerateColumns { get; set; }
+
+    public IList<ColumnDefinition> ColumnDefs { get; } = new List<ColumnDefinition>();
+
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            if (AutoGenerateColumns)
+            {
+                foreach (var propertyInfo in typeof(TRow).GetProperties())
+                {
+                    ColumnDefs.Add(new ColumnDefinition
+                    {
+                        HeaderName = propertyInfo.Name,
+                        Field = propertyInfo.Name,
+                        Sortable = true,
+                        Filter = true
+                    });
+                }
+            }
+
+
+
             await JsRtime.InvokeVoidAsync("ag_Grid.initialize",
-                _componentId,_gridRef, DotNetObjectReference.Create(this));
+            _componentId,_gridRef, DotNetObjectReference.Create(this));
         }
         await JsRtime.InvokeVoidAsync("ag_Grid.setRows",
             _componentId,RowData);
+        await JsRtime.InvokeVoidAsync("ag_Grid.setColumnDefs",
+             _componentId, ColumnDefs);
     }
 
     protected override bool ShouldRender()

@@ -8,6 +8,7 @@
 else
 {
 <BlazorAgGrid RowData="Employees" TRow="Employee"
+              AutoGenerateColumns="true"
               OnSelectionChanged="GridSelectionChanged" />
 
                 @if (SelectedEmployee != null)
@@ -25,4 +26,4 @@ else
                                 
     
     
-    <BlazorAgGrid RowData="Employees" />}
+    <BlazorAgGrid RowData="Employees"  AutoGenerateColumns="true" />}
