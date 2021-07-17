@@ -2,3 +2,11 @@
   height: 250px;
   margin: 0px 0px 20px 0px;
 }
+
+.my-grid2 {
+    FONT-WEIGHT: 600;
+    background: azure !important;
+    height: 50px !important;
+    color: black;
+    font-size: x-large;
+}
