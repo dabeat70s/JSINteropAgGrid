@@ -7,7 +7,7 @@
 <p><em>Loading...</em></p> }
 else
 {
-<BlazorAgGrid RowData="Employees" TRow="Employee"
+<BlazorAgGrid RowData="Employees" TRow="Employee" OnRowDragChanged="RowDragEnded"
               AutoGenerateColumns="false"
               OnSelectionChanged="GridSelectionChanged">
     <BlazorAgGridColumn HeaderName="Firstname" Field="FirstName"

@@ -25,5 +25,10 @@ namespace BethanysPieShopHRM.ServerApp.Pages.HumanResources
         {
             SelectedEmployee = employee;
         }
+
+        private void RowDragEnded(List<Employee> employees)
+        {
+            Employees = employees;
+        }
     }
 }

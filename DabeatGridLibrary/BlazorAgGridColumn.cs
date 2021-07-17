@@ -15,6 +15,7 @@ namespace DabeatGridLibrary
         [Parameter] public string Field { get; set; }
         [Parameter] public bool Sortable { get; set; }
         [Parameter] public bool Filter { get; set; }
+        [Parameter] public bool IsRowDrag { get; set; }
 
         protected override void OnParametersSet()
         {
@@ -22,6 +23,7 @@ namespace DabeatGridLibrary
             _columnDef.Field = Field;
             _columnDef.Sortable = Sortable;
             _columnDef.Filter = Filter;
+           
         }
 
         [CascadingParameter]

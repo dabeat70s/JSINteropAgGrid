@@ -1,4 +1,5 @@
-﻿@typeparam TRow
+﻿@typeparam TRow 
+@*@using System.Reflection*@
 @inject IJSRuntime JsRtime
 @implements IDisposable
 @implements IBlazorAgGrid
@@ -15,10 +16,13 @@
     private bool _inSelectionChangedEvent;
 
     [Parameter]
-    public IEnumerable<TRow> RowData { get; set; }
+    public List<TRow> RowData { get; set; }
 
     [Parameter]
     public EventCallback<TRow> OnSelectionChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<List<TRow>> OnRowDragChanged { get; set; }
 
     [Parameter]
     public bool AutoGenerateColumns { get; set; }
@@ -26,7 +30,11 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-    public IList<ColumnDefinition> ColumnDefs { get; } = new List<ColumnDefinition>();
+    [Parameter]
+    public bool IsRowDragable { get; set; }
+
+    public IList<ColumnDefinition> ColumnDefs { get; } = new List<ColumnDefinition>();   
+
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -34,33 +42,52 @@
         {
             if (AutoGenerateColumns)
             {
+
                 foreach (var propertyInfo in typeof(TRow).GetProperties())
                 {
+                   
+
                     ColumnDefs.Add(new ColumnDefinition
                     {
                         HeaderName = propertyInfo.Name,
                         Field = propertyInfo.Name,
                         Sortable = true,
-                        Filter = true
+                        Filter = true,
+
                     });
+
+
                 }
             }
 
 
 
             await JsRtime.InvokeVoidAsync("ag_Grid.initialize",
-            _componentId,_gridRef, DotNetObjectReference.Create(this));
+            _componentId, _gridRef, DotNetObjectReference.Create(this), IsRowDragable);
+            await JsRtime.InvokeVoidAsync("ag_Grid.setRows",
+          _componentId, RowData);
+            await JsRtime.InvokeVoidAsync("ag_Grid.setColumnDefs",
+                 _componentId, ColumnDefs, IsRowDragable);
+
         }
-        await JsRtime.InvokeVoidAsync("ag_Grid.setRows",
-            _componentId,RowData);
-        await JsRtime.InvokeVoidAsync("ag_Grid.setColumnDefs",
-             _componentId, ColumnDefs);
+        //await JsRtime.InvokeVoidAsync("ag_Grid.setRows",
+        //    _componentId, RowData);
+        //await JsRtime.InvokeVoidAsync("ag_Grid.setColumnDefs",
+        //     _componentId, ColumnDefs, IsRowDragable);
     }
 
     protected override bool ShouldRender()
     {
         //return base.ShouldRender();
         return !_inSelectionChangedEvent;
+    }
+
+    [JSInvokable]
+    public async Task SetInitDragProp(TRow row, int num)
+    {
+       
+
+        await JsRtime.InvokeVoidAsync("console.log", $" row to start off  = {num}", row) ;
     }
 
 
@@ -79,6 +106,64 @@
         {
             _inSelectionChangedEvent = false;
         }
+    }
+
+    [JSInvokable]
+    public async Task<IList<TRow>> RaiseOnRowDrag(TRow row, int newIndex)
+    {
+
+        try
+        {
+            var i = 0;
+            _inSelectionChangedEvent = true;
+            if (OnRowDragChanged.HasDelegate)
+            {
+                var idProp = typeof(TRow).GetProperty("Id");
+                var sumI = idProp.GetValue(row);
+                await JsRtime.InvokeVoidAsync("console.log","summi value",sumI);                
+
+                TRow entToMove = RowData.FirstOrDefault(e => idProp.GetValue(e).ToString() == sumI.ToString());
+                await JsRtime.InvokeVoidAsync("console.log", $"Matching try2 = {idProp.GetValue(entToMove).ToString()} ,");
+                var position = RowData.IndexOf(entToMove);
+                await JsRtime.InvokeVoidAsync("console.log", $"posit with indexoOf triaPos = {position}");
+
+                ////finding the list item in foreach
+                //foreach (var item in RowData)
+                //{
+                //    var check = idProp.GetValue(item);
+                //    await JsRtime.InvokeVoidAsync("console.log", $"get check  = {check}");
+                //    if (sumI.ToString() == check.ToString())
+                //    {
+                //        await JsRtime.InvokeVoidAsync("console.log", $"Match found  position = {i} ,", item);
+                //        break;
+                //    }
+
+                //    i++;
+                //}
+
+                //var position = i;
+
+
+
+                bool isDele = RowData.Remove(entToMove);
+                await JsRtime.InvokeVoidAsync("console.log", " is this deleted ", isDele);
+                if (!isDele)
+                {
+                    return null;
+                }
+               
+                RowData.Insert(newIndex, entToMove);
+
+                await OnRowDragChanged.InvokeAsync(RowData);
+
+            }
+
+        }
+        finally
+        {
+            _inSelectionChangedEvent = false;
+        }
+        return RowData;
     }
 
     public async void Dispose()

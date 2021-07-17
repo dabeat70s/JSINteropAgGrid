@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BethanysPieShopHRM.Shared",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BethanysPieShopHRM.ComponentsLibrary", "BethanysPieShopHRM.ComponentsLibrary\BethanysPieShopHRM.ComponentsLibrary.csproj", "{BD196906-CA10-437E-BBCC-A8BC2A954F13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DabeatsOnlineCheckRCL", "DabeatsOnlineCheckRCL\DabeatsOnlineCheckRCL.csproj", "{DEE6F5BD-C023-44CC-841F-67CF565654D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DabeatsOnlineCheckRCL", "DabeatsOnlineCheckRCL\DabeatsOnlineCheckRCL.csproj", "{DEE6F5BD-C023-44CC-841F-67CF565654D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DabeatGridLibrary", "DabeatGridLibrary\DabeatGridLibrary.csproj", "{17C77990-4657-40EF-B7ED-B36D2C2CD0AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DabeatGridLibrary", "DabeatGridLibrary\DabeatGridLibrary.csproj", "{17C77990-4657-40EF-B7ED-B36D2C2CD0AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

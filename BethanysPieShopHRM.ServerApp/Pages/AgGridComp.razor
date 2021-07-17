@@ -1,0 +1,45 @@
+﻿@page "/aggrid"
+@*@typeparam Employee*@
+<h3>AgGridComp</h3>
+<h5>There are @CarsCount cars available</h5>
+
+@if (Cars == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+
+<BlazorAgGrid TRow="Car" RowData="Cars" OnSelectionChanged="GridSelectionChanged" IsRowDragable="true"
+              OnRowDragChanged="RowDragEnded" AutoGenerateColumns="false">
+    <BlazorAgGridColumn HeaderName="Athlete" Field="Athlete"
+                        Sortable="true" Filter="true"></BlazorAgGridColumn>
+    <BlazorAgGridColumn HeaderName="Age" Field="Age"
+                        Sortable="true" Filter="true"></BlazorAgGridColumn>
+    <BlazorAgGridColumn HeaderName="Country" Field="Country"
+                        Sortable="true" Filter="true"></BlazorAgGridColumn>
+    <BlazorAgGridColumn HeaderName="Date" Field="Date"
+                        Sortable="true" Filter="true"></BlazorAgGridColumn>
+    <BlazorAgGridColumn HeaderName="Year" Field="Year"
+                        Sortable="true" Filter="true"></BlazorAgGridColumn>
+    <BlazorAgGridColumn HeaderName="Sport" Field="Sport"
+                        Sortable="true" Filter="true"></BlazorAgGridColumn>
+    <BlazorAgGridColumn HeaderName="Total" Field="Total"
+                        Sortable="true" Filter="true"></BlazorAgGridColumn>
+
+</BlazorAgGrid>
+
+}
+
+<button @onclick="BtnShow">Man Show</button>
+<div style="max-height:600px; overflow:hidden; overflow:scroll">
+    @if (BtnControl)
+    {
+        foreach (var item in Cars)
+        {
+            <div class="table-success">@item.Athlete @item.Age @item.Country</div>
+            <br />
+        }
+    }
+</div>
